@@ -1,26 +1,81 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import ReactDOM from "react-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      red: 0,
+    };
+    this.update = this.update.bind(this);
+  }
+  update(e) {
+    this.setState({
+      red: ReactDOM.findDOMNode(this.refs.red.refs.inp).value,
+    });
+  }
+  render() {
+    return (
+      <div>
+        <NumInput
+          ref="red"
+          min={0}
+          max={255}
+          step={0.01}
+          val={+this.state.red}
+          label="Red"
+          update={this.update}
+        />
+        {this.state.red}
+      </div>
+    );
+  }
 }
+
+class NumInput extends React.Component {
+  render() {
+    let label =
+      this.props.label !== "" ? (
+        <label>
+          {this.props.label} - {this.props.val}
+        </label>
+      ) : (
+        ""
+      );
+    return (
+      <div>
+        <input
+          ref="inp"
+          type={this.props.type}
+          min={this.props.min}
+          max={this.props.max}
+          step={this.props.step}
+          defaultValue={this.props.val}
+          onChange={this.props.update}
+        />
+        {label}
+      </div>
+    );
+  }
+}
+
+NumInput.propTypes = {
+  min: React.PropTypes,
+  max: React.PropTypes,
+  step: React.PropTypes,
+  val: React.PropTypes,
+  label: React.PropTypes,
+  update: React.PropTypes,
+  type: React.PropTypes,
+};
+
+NumInput.defaultProps = {
+  min: 0,
+  max: 0,
+  step: 1,
+  val: 0,
+  label: "",
+  type: "range",
+};
 
 export default App;
